@@ -86,7 +86,11 @@ public class UsersQueueExtension implements
             }
 
             user.ifPresentOrElse(
-                    u -> usersMap.put(userType, u),
+                    u ->
+                            ((Map<UserType, StaticUser>) context.getStore(NAMESPACE).getOrComputeIfAbsent(
+                                    context.getUniqueId(),
+                                    key -> new HashMap<>()
+                            )).put(userType, u),
                     () -> {
                         throw new IllegalStateException("User type" + userType + " not found");
                     }
@@ -124,7 +128,7 @@ public class UsersQueueExtension implements
 
     @Override
     public StaticUser resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return (StaticUser)extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), Map.class)
+        return (StaticUser) extensionContext.getStore(NAMESPACE).get(extensionContext.getUniqueId(), Map.class)
                 .get(
                         AnnotationSupport.findAnnotation(parameterContext.getParameter(), UserType.class).get()
                 );
