@@ -10,7 +10,6 @@ public class RandomDataUtils {
 
     public static final Random rand = new Random();
 
-
     public static String randomUserName() {
         return faker.name().username() + "_" + rand.nextInt(1000);
     }
@@ -24,7 +23,7 @@ public class RandomDataUtils {
     }
 
     public static String randomPassword() {
-        return faker.internet().password(6,10);
+        return faker.internet().password(6, 10);
     }
 
     public static String randomCategoryName() {

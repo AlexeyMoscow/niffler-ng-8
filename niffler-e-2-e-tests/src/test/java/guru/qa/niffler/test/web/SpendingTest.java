@@ -3,10 +3,10 @@ package guru.qa.niffler.test.web;
 import com.codeborne.selenide.Selenide;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.jupiter.annotation.Category;
+import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.extension.BrowserExtension;
 import guru.qa.niffler.jupiter.annotation.Spend;
 import guru.qa.niffler.model.CategoryJson;
-import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
@@ -20,12 +20,16 @@ public class SpendingTest {
 
   private static final Config CFG = Config.getInstance();
 
-  @Spend(
+  @User(
       username = "alex",
-      category = "Обучение",
-      description = "Обучение Niffler 2.0",
-      amount = 89000.00,
-      currency = CurrencyValues.RUB
+      categories = @Category(
+              archived = false
+      ),
+      spendings = @Spend(
+              category = "Обучение",
+              description = "Обучение Niffler 2.0",
+              amount = 89000.00
+      )
   )
   @Test
   void spendingDescriptionShouldBeUpdatedByTableAction(SpendJson spend) {
@@ -39,12 +43,16 @@ public class SpendingTest {
     new MainPage().checkThatTableContains(newDescription);
   }
 
-  @Spend(
+  @User(
           username = "alex",
-          category = "обучение",
-          description = "Обучение Advanced 2.0",
-          amount = 79990,
-          currency = CurrencyValues.RUB
+          categories = @Category(
+                  archived = false
+          ),
+          spendings = @Spend(
+                  category = "Обучение",
+                  description = "Обучение Niffler 2.0",
+                  amount = 89000.00
+          )
   )
   @Test
   void categoryDescriptionShouldBeChangedFromTable(SpendJson spend) {
@@ -58,9 +66,11 @@ public class SpendingTest {
     new MainPage().checkThatTableContains(newDescription);
   }
 
-  @Category(
+  @User(
           username = "alex",
-          archived = false
+          categories = @Category(
+                  archived = false
+          )
   )
   @Test
   void archivedCategoryShouldBePresentedInList(CategoryJson category) {
@@ -75,9 +85,11 @@ public class SpendingTest {
             .verifyArchivedCategoryInList(category.name());
   }
 
-  @Category(
+  @User(
           username = "alex",
-          archived = true
+          categories = @Category(
+                  archived = true
+          )
   )
   @Test
   void activeCategoryShouldBePresentedInListAfterRestored(CategoryJson category) {
