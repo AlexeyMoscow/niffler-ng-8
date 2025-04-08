@@ -8,6 +8,12 @@ public interface Config {
 
   String frontUrl();
 
+  String authUrl();
+
+  String gateWayUrl();
+
+  String userDataUrl();
+
   String spendUrl();
 
   String ghUrl();
