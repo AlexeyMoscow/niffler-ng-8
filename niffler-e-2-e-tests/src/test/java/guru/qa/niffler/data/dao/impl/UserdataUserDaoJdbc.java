@@ -51,7 +51,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     public Optional<UserEntity> findById(UUID id) {
         try (Connection connection = Databases.connection(CFG.userdataJdbcUrl());
              PreparedStatement ps = connection.prepareStatement(
-                     "SELECT * FROM user WHERE id = ?");) {
+                     "SELECT * FROM user WHERE id = ?")) {
             ps.setObject(1, id);
             ps.execute();
 
@@ -69,7 +69,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     public Optional<UserEntity> findByUsername(String username) {
         try (Connection connection = Databases.connection(CFG.userdataJdbcUrl());
              PreparedStatement ps = connection.prepareStatement(
-                     "SELECT * FROM user WHERE username = ?");) {
+                     "SELECT * FROM user WHERE username = ?")) {
             ps.setObject(1, username);
             ps.execute();
 
