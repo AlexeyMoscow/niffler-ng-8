@@ -78,7 +78,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
      try(Connection connection = Databases.connection(CFG.spendJdbcUrl());
      PreparedStatement ps = connection.prepareStatement(
-             "SELECT * FROM category WHERE username = ? AND category = ?")){
+             "SELECT * FROM category WHERE username = ? AND name = ?")){
        ps.setString(1, username);
        ps.setString(2, categoryName);
 

@@ -19,7 +19,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     public UserEntity createUser(UserEntity user) {
         try (Connection connection = Databases.connection(CFG.userdataJdbcUrl());
              PreparedStatement ps = connection.prepareStatement(
-                     "INSERT INTO user (username, currency, firstname, surname, photo, photo_small, full_name) " +
+                     "INSERT INTO \"user\" (username, currency, firstname, surname, photo, photo_small, full_name) " +
                              "VALUES ( ?, ?, ?, ?, ?, ?, ?)",
                      Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, user.getUsername());
@@ -51,7 +51,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     public Optional<UserEntity> findById(UUID id) {
         try (Connection connection = Databases.connection(CFG.userdataJdbcUrl());
              PreparedStatement ps = connection.prepareStatement(
-                     "SELECT * FROM user WHERE id = ?")) {
+                     "SELECT * FROM \"user\" WHERE id = ?")) {
             ps.setObject(1, id);
             ps.execute();
 
@@ -69,7 +69,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     public Optional<UserEntity> findByUsername(String username) {
         try (Connection connection = Databases.connection(CFG.userdataJdbcUrl());
              PreparedStatement ps = connection.prepareStatement(
-                     "SELECT * FROM user WHERE username = ?")) {
+                     "SELECT * FROM \"user\" WHERE username = ?")) {
             ps.setObject(1, username);
             ps.execute();
 
@@ -87,7 +87,7 @@ public class UserdataUserDaoJdbc implements UserdataUserDao {
     public void delete(UserEntity user) {
         try (Connection connection = Databases.connection(CFG.userdataJdbcUrl());
              PreparedStatement ps = connection.prepareStatement(
-                     "DELETE FROM user WHERE id = ?")) {
+                     "DELETE FROM \"user\" WHERE id = ?")) {
             ps.setObject(1, user.getId());
             ps.executeUpdate();
 
