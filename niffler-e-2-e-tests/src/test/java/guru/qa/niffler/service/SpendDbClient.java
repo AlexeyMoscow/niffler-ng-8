@@ -8,7 +8,7 @@ import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.SpendJson;
 
-import static guru.qa.niffler.data.Databases.transaction;
+import static guru.qa.niffler.data.dataUtils.Databases.transaction;
 
 public class SpendDbClient {
 

@@ -78,8 +78,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
   @Override
   public Optional<CategoryEntity> findCategoryByUsernameAndCategoryName(String username, String categoryName) {
-     try(Connection connection = Databases.connection(CFG.spendJdbcUrl());
-     PreparedStatement ps = connection.prepareStatement(
+     try(PreparedStatement ps = connection.prepareStatement(
              "SELECT * FROM category WHERE username = ? AND name = ?")){
        ps.setString(1, username);
        ps.setString(2, categoryName);
@@ -105,9 +104,7 @@ public class CategoryDaoJdbc implements CategoryDao {
   @Override
   public List<CategoryEntity> findAllByUsername(String username) {
     List<CategoryEntity> categories = new ArrayList<>();
-
-    try (Connection connection = Databases.connection(CFG.spendJdbcUrl());
-         PreparedStatement ps = connection.prepareStatement(
+    try(PreparedStatement ps = connection.prepareStatement(
                  "SELECT * FROM category WHERE username = ?")) {
       ps.setObject(1, username);
       try (ResultSet rs = ps.executeQuery()) {
@@ -129,8 +126,7 @@ public class CategoryDaoJdbc implements CategoryDao {
 
   @Override
   public void deleteCategory(CategoryEntity category) {
-    try (Connection connection = Databases.connection(CFG.spendJdbcUrl());
-         PreparedStatement ps = connection.prepareStatement(
+    try(PreparedStatement ps = connection.prepareStatement(
                  "DELETE from category WHERE id = ?")
          ) {
       ps.setObject(1, category.getId());
