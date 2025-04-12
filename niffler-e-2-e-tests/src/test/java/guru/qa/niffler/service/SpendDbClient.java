@@ -15,30 +15,28 @@ public class SpendDbClient {
     private static final Config CFG = Config.getInstance();
 
     public SpendJson createSpend(SpendJson spend) {
-        SpendEntity spendEntity = SpendEntity.fromJson(spend);
-        if (spendEntity.getCategory().getId() == null) {
-            CategoryEntity categoryEntity = categoryDao.create(spendEntity.getCategory());
-            spendEntity.setCategory(categoryEntity);
-        }
-        return SpendJson.fromEntity(
-                spendDao.create(spendEntity)
+        return transaction(connection -> {
+                    SpendEntity spendEntity = SpendEntity.fromJson(spend);
+                    if (spendEntity.getCategory().getId() == null) {
+                        CategoryEntity categoryEntity = new CategoryDaoJdbc(connection)
+                                .create(spendEntity.getCategory());
+                        spendEntity.setCategory(categoryEntity);
+                    }
+                    return SpendJson.fromEntity(
+                            new SpendDaoJdbc(connection).create(spendEntity)
+                    );
+                },
+                CFG.spendJdbcUrl()
         );
-    }
-
-    public void deleteSpend(SpendJson spend) {
-        SpendEntity spendEntity = SpendEntity.fromJson(spend);
-        spendDao.deleteSpend(spendEntity);
     }
 
     public CategoryJson createCategory(CategoryJson category) {
-        CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
-        return CategoryJson.fromEntity(
-                categoryDao.create(categoryEntity)
+        return transaction(connection -> {
+                    CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
+                    return CategoryJson.fromEntity(
+                            new CategoryDaoJdbc(connection).create(categoryEntity));
+                },
+                CFG.spendJdbcUrl()
         );
-    }
-
-    public void deleteCategory(CategoryJson category) {
-        CategoryEntity categoryEntity = CategoryEntity.fromJson(category);
-        categoryDao.deleteCategory(categoryEntity);
     }
 }
