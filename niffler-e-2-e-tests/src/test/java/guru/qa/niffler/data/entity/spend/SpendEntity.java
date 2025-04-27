@@ -29,6 +29,14 @@ import static jakarta.persistence.CascadeType.PERSIST;
 @Entity
 @Table(name = "spend")
 public class SpendEntity implements Serializable {
+
+  public SpendEntity(UUID id) {
+    this.id = id;
+  }
+
+  public SpendEntity() {
+  }
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id", nullable = false, columnDefinition = "UUID default gen_random_uuid()")

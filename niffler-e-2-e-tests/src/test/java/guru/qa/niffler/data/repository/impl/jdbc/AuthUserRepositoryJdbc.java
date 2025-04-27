@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.repository.impl;
+package guru.qa.niffler.data.repository.impl.jdbc;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
@@ -88,6 +88,34 @@ public class AuthUserRepositoryJdbc implements AuthUserRepository {
         } else {
           user.setAuthorities(authorityEntities);
           return Optional.of(user);
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public Optional<AuthUserEntity> findByUsername(String username) {
+    try (PreparedStatement ps = holder(CFG.authJdbcUrl()).connection().prepareStatement(
+            "SELECT * FROM \"user\" WHERE username = ?"
+    )) {
+      ps.setObject(1, username);
+      ps.execute();
+      try (ResultSet rs = ps.getResultSet()) {
+        if (rs.next()) {
+          AuthUserEntity ue = new AuthUserEntity();
+
+          ue.setId(rs.getObject("id", UUID.class));
+          ue.setUsername(rs.getString("username"));
+          ue.setPassword(rs.getString("password"));
+          ue.setEnabled((rs.getBoolean("enabled")));
+          ue.setAccountNonExpired((rs.getBoolean("account_non_expired")));
+          ue.setAccountNonLocked((rs.getBoolean("account_non_locked")));
+          ue.setCredentialsNonExpired((rs.getBoolean("credentials_non_expired")));
+          return Optional.ofNullable(ue);
+        } else {
+          return Optional.empty();
         }
       }
     } catch (SQLException e) {
