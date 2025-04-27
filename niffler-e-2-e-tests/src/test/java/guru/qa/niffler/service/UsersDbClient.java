@@ -22,6 +22,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Arrays;
 
+import static guru.qa.niffler.data.tpl.DataSources.dataSource;
+
 
 public class UsersDbClient {
 
@@ -34,21 +36,22 @@ public class UsersDbClient {
 
   private final TransactionTemplate txTemplate = new TransactionTemplate(
       new JdbcTransactionManager(
-          DataSources.dataSource(CFG.authJdbcUrl())
+          dataSource(CFG.authJdbcUrl())
       )
   );
 
   private final XaTransactionTemplate xaTransactionTemplate = new XaTransactionTemplate(
       CFG.authJdbcUrl(),
-      CFG.userdataUrl()
+      CFG.userdataJdbcUrl()
   );
 
     private final TransactionTemplate chainyTxTemplate = new TransactionTemplate(
             new ChainedTransactionManager(
-                    new JdbcTransactionManager(DataSources.dataSource(CFG.authJdbcUrl())),
-
-                    new ChainedTransactionManager(
-                            new JdbcTransactionManager(DataSources.dataSource(CFG.userdataJdbcUrl()))
+                    new JdbcTransactionManager(
+                            dataSource(CFG.authJdbcUrl())
+                    ),
+                    new JdbcTransactionManager(
+                            dataSource(CFG.userdataJdbcUrl())
                     )
             )
     );
