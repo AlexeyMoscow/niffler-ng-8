@@ -16,12 +16,15 @@ import guru.qa.niffler.data.repository.impl.spring.UserDataRepositorySpringJdbc;
 import guru.qa.niffler.data.tpl.DataSources;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.UserJson;
+import org.springframework.data.transaction.ChainedTransactionManager;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.support.TransactionTemplate;
 
 import java.util.Arrays;
+
+import static guru.qa.niffler.data.tpl.DataSources.dataSource;
 
 
 public class UsersDbClient {
@@ -38,7 +41,7 @@ public class UsersDbClient {
 
   private final TransactionTemplate txTemplate = new TransactionTemplate(
       new JdbcTransactionManager(
-          DataSources.dataSource(CFG.authJdbcUrl())
+          dataSource(CFG.authJdbcUrl())
       )
   );
 
@@ -46,6 +49,17 @@ public class UsersDbClient {
       CFG.authJdbcUrl(),
       CFG.userdataJdbcUrl()
   );
+
+    private final TransactionTemplate chainyTxTemplate = new TransactionTemplate(
+            new ChainedTransactionManager(
+                    new JdbcTransactionManager(
+                            dataSource(CFG.authJdbcUrl())
+                    ),
+                    new JdbcTransactionManager(
+                            dataSource(CFG.userdataJdbcUrl())
+                    )
+            )
+    );
 
   public UserJson createUser(UserJson user) {
     return xaTransactionTemplate.execute(() -> {
