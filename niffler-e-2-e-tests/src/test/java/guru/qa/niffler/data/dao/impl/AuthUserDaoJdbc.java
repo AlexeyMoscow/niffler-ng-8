@@ -77,6 +77,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
 
   @Override
   public List<AuthUserEntity> findAll() {
+
     try (PreparedStatement ps = holder(url).connection().prepareStatement(
         "SELECT * FROM \"user\"")) {
       ps.execute();
@@ -95,6 +96,7 @@ public class AuthUserDaoJdbc implements AuthUserDao {
         }
       }
       return result;
+
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

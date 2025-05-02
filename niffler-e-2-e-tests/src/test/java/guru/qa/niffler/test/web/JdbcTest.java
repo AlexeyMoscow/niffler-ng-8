@@ -54,4 +54,43 @@ public class JdbcTest {
     usersDbClient.addIncomeInvitation(user, 1);
     usersDbClient.addOutcomeInvitation(user, 1);
   }
+
+  @Test
+  void springJdbcTxTest() {
+    UsersDbClient usersDbClient = new UsersDbClient();
+    UserJson user = usersDbClient.createUser(
+            new UserJson(
+                    null,
+                    "test-1",
+                    null,
+                    null,
+                    null,
+                    CurrencyValues.RUB,
+                    null,
+                    null,
+                    null
+            )
+    );
+    System.out.println(user);
+  }
+
+  @Test
+  void jbcChainedTest() {
+    UsersDbClient uc = new UsersDbClient();
+    UserJson user = uc.createUserWithChainTx(
+            new UserJson(
+                    null,
+                    "test-with-chain",
+                    null,
+                    null,
+                    null,
+                    CurrencyValues.RUB,
+                    null,
+                    null,
+                    null
+            )
+    );
+    System.out.println(user);
+  }
+
 }
