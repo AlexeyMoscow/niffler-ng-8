@@ -10,12 +10,29 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 
 public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
 
   private static final Config CFG = Config.getInstance();
   private final String url = CFG.authJdbcUrl();
+
+    @Override
+    public void create(AuthorityEntity entity) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+        jdbcTemplate.update(
+                con -> {
+                    PreparedStatement ps = con.prepareStatement(
+                            "INSERT INTO authority (user_id, authority) VALUES (?, ?)",
+                            Statement.RETURN_GENERATED_KEYS
+                    );
+                    ps.setObject(1, entity.getUser().getId());
+                    ps.setString(2, entity.getAuthority().name());
+                    return ps;
+                }
+        );
+    }
 
   @Override
   public void create(AuthorityEntity... authority) {
@@ -45,4 +62,12 @@ public class AuthAuthorityDaoSpringJdbc implements AuthAuthorityDao {
         AuthorityEntityRowMapper.instance
     );
   }
+
+    @Override
+    public void delete(AuthorityEntity entity) {
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.authJdbcUrl()));
+        jdbcTemplate.update(
+                "DELETE FROM authority WHERE id = ?",
+                entity.getId());
+    }
 }

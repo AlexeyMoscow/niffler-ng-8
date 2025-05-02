@@ -1,4 +1,4 @@
-package guru.qa.niffler.data.repository.impl;
+package guru.qa.niffler.data.repository.impl.hibernate;
 
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
@@ -21,6 +21,13 @@ public class AuthUserRepositoryHibernate implements AuthUserRepository {
   public AuthUserEntity create(AuthUserEntity user) {
     entityManager.joinTransaction();
     entityManager.persist(user);
+    return user;
+  }
+
+  @Override
+  public AuthUserEntity update(AuthUserEntity user) {
+    entityManager.joinTransaction();
+    entityManager.merge(user);
     return user;
   }
 

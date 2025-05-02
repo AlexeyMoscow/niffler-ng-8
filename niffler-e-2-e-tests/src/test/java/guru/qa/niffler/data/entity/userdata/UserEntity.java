@@ -124,6 +124,8 @@ public class UserEntity implements Serializable {
     ue.setFullname(json.fullname());
     ue.setPhoto(json.photo() != null ? json.photo().getBytes(StandardCharsets.UTF_8) : null);
     ue.setPhotoSmall(json.photoSmall() != null ? json.photoSmall().getBytes(StandardCharsets.UTF_8) : null);
+    ue.setFriendshipRequests(new ArrayList<>());
+    ue.setFriendshipAddressees(new ArrayList<>());
     return ue;
   }
 

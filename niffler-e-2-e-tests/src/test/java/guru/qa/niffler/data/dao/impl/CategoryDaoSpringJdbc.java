@@ -5,6 +5,7 @@ import guru.qa.niffler.data.dao.CategoryDao;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.mapper.CategoryEntityRowMapper;
 import guru.qa.niffler.data.tpl.DataSources;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -42,7 +43,7 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
   }
 
   @Override
-  public Optional<CategoryEntity> findCategoryById(UUID id) {
+  public Optional<CategoryEntity> findById(UUID id) {
     JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(url));
     return Optional.ofNullable(
         jdbcTemplate.queryForObject(
@@ -59,6 +60,41 @@ public class CategoryDaoSpringJdbc implements CategoryDao {
     return jdbcTemplate.query(
         "SELECT * FROM \"category\"",
         CategoryEntityRowMapper.instance
+    );
+  }
+
+  public Optional<CategoryEntity> findByUsernameAndCategoryName(String username, String categoryName) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
+    try {
+      return Optional.ofNullable(
+              jdbcTemplate.queryForObject(
+                      "SELECT * FROM category WHERE username = ? AND name = ?",
+                      CategoryEntityRowMapper.instance,
+                      username,
+                      categoryName
+              )
+      );
+    } catch (EmptyResultDataAccessException e) {
+      return Optional.empty();
+    }
+  }
+
+  @Override
+  public List<CategoryEntity> findAllByUserName(String userName) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
+    return jdbcTemplate.query(
+            "SELECT * FROM category WHERE username = ?",
+            CategoryEntityRowMapper.instance,
+            userName
+    );
+  }
+
+  @Override
+  public void delete(CategoryEntity category) {
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(DataSources.dataSource(CFG.spendJdbcUrl()));
+    jdbcTemplate.update(
+            "DELETE FROM category WHERE id = ?",
+            category.getId()
     );
   }
 }

@@ -49,7 +49,28 @@ public class CategoryDaoJdbc implements CategoryDao {
   }
 
   @Override
-  public Optional<CategoryEntity> findCategoryById(UUID id) {
+  public List<CategoryEntity> findAllByUserName(String username) {
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+            "SELECT * FROM category WHERE username = ?"
+    )) {
+      ps.setString(1, username);
+      ps.execute();
+
+      try (ResultSet rs = ps.getResultSet()) {
+        List<CategoryEntity> ceList = new ArrayList<>();
+        while (rs.next()) {
+          CategoryEntity ce = fillCategoryEntity(rs);
+          ceList.add(ce);
+        }
+        return ceList;
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public Optional<CategoryEntity> findById(UUID id) {
     try (PreparedStatement ps = holder(url).connection().prepareStatement(
         "SELECT * FROM category WHERE id = ?"
     )) {
@@ -92,5 +113,48 @@ public class CategoryDaoJdbc implements CategoryDao {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public Optional<CategoryEntity> findByUsernameAndCategoryName(String username, String categoryName) {
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+            "SELECT * FROM category " +
+                    "WHERE username = ? AND name = ?"
+    )) {
+      ps.setString(1, username);
+      ps.setString(2, categoryName);
+      ps.execute();
+
+      try (ResultSet rs = ps.getResultSet()) {
+        if (rs.next()) {
+          CategoryEntity ce = fillCategoryEntity(rs);
+          return Optional.of(ce);
+        } else {
+          return Optional.empty();
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Override
+  public void delete(CategoryEntity category) {
+    try (PreparedStatement ps = holder(CFG.spendJdbcUrl()).connection().prepareStatement(
+            "DELETE FROM category WHERE id = ?"
+    )) {
+      ps.setObject(1, category.getId());
+      ps.executeUpdate();
+    } catch (SQLException e) {
+      throw new RuntimeException("Can't delete entity", e);
+    }
+  }
+
+  private static CategoryEntity fillCategoryEntity(ResultSet rs) throws SQLException {
+    CategoryEntity ce = new CategoryEntity();
+    ce.setId(rs.getObject("id", UUID.class));
+    ce.setName(rs.getString("name"));
+    ce.setUsername(rs.getString("username"));
+    ce.setArchived(rs.getBoolean("archived"));
+    return ce;
   }
 }

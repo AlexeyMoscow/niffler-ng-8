@@ -9,6 +9,8 @@ public interface UserdataUserRepository {
 
   UserEntity create(UserEntity user);
 
+  UserEntity update(UserEntity user);
+
   Optional<UserEntity> findById(UUID id);
 
   Optional<UserEntity> findByUsername(String username);
@@ -18,4 +20,6 @@ public interface UserdataUserRepository {
   void addOutcomeInvitation(UserEntity requester, UserEntity addressee);
 
   void addFriend(UserEntity requester, UserEntity addressee);
+
+  void remove(UserEntity user);
 }

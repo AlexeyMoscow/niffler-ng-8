@@ -1,6 +1,8 @@
 package guru.qa.niffler.data.repository.impl.spring;
 
 import guru.qa.niffler.config.Config;
+import guru.qa.niffler.data.dao.AuthUserDao;
+import guru.qa.niffler.data.dao.impl.AuthUserDaoSpringJdbc;
 import guru.qa.niffler.data.entity.auth.AuthUserEntity;
 import guru.qa.niffler.data.extractor.AuthUserEntityExtractor;
 import guru.qa.niffler.data.repository.AuthUserRepository;
@@ -19,6 +21,7 @@ import java.util.UUID;
 public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
 
     private static final Config CFG = Config.getInstance();
+    AuthUserDao authUserDao = new AuthUserDaoSpringJdbc();
 
     @Override
     public AuthUserEntity create(AuthUserEntity user) {
@@ -56,6 +59,12 @@ public class AuthUserRepositorySpringJdbc implements AuthUserRepository {
                     }
                 }
         );
+        return user;
+    }
+
+    @Override
+    public AuthUserEntity update(AuthUserEntity user) {
+        authUserDao.update(user);
         return user;
     }
 
