@@ -1,15 +1,10 @@
 package guru.qa.niffler.service.impl;
 
 import guru.qa.niffler.config.Config;
-import guru.qa.niffler.data.dao.CategoryDao;
-import guru.qa.niffler.data.dao.SpendDao;
-import guru.qa.niffler.data.dao.impl.CategoryDaoJdbc;
-import guru.qa.niffler.data.dao.impl.SpendDaoJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
 import guru.qa.niffler.data.repository.SpendRepository;
 import guru.qa.niffler.data.repository.impl.hibernate.SpendRepositoryHibernate;
-import guru.qa.niffler.data.tpl.JdbcTransactionTemplate;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;

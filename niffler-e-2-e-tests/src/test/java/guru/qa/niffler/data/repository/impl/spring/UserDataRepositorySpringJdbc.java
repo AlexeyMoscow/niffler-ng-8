@@ -8,21 +8,15 @@ import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.mapper.UdUserEntityRowMapper;
 import guru.qa.niffler.data.repository.UserDataRepository;
 import guru.qa.niffler.data.tpl.DataSources;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static guru.qa.niffler.data.entity.userdata.FriendshipStatus.ACCEPTED;
 import static guru.qa.niffler.data.entity.userdata.FriendshipStatus.PENDING;
-import static guru.qa.niffler.data.tpl.Connections.holder;
 
 public class UserDataRepositorySpringJdbc implements UserDataRepository {
     private static final Config CFG = Config.getInstance();

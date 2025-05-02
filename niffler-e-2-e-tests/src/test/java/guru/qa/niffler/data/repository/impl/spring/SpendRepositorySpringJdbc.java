@@ -7,17 +7,13 @@ import guru.qa.niffler.data.dao.impl.CategoryDaoSpringJdbc;
 import guru.qa.niffler.data.dao.impl.SpendDaoSpringJdbc;
 import guru.qa.niffler.data.entity.spend.CategoryEntity;
 import guru.qa.niffler.data.entity.spend.SpendEntity;
-import guru.qa.niffler.data.extractor.SpendEntityExtractor;
 import guru.qa.niffler.data.mapper.SpendWithCategoryEntityRowMapper;
 import guru.qa.niffler.data.repository.SpendRepository;
 import guru.qa.niffler.data.tpl.DataSources;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.util.Optional;
 import java.util.UUID;
 

@@ -7,9 +7,7 @@ import guru.qa.niffler.data.entity.auth.AuthorityEntity;
 import guru.qa.niffler.data.entity.userdata.UserEntity;
 import guru.qa.niffler.data.repository.AuthUserRepository;
 import guru.qa.niffler.data.repository.UserDataRepository;
-import guru.qa.niffler.data.repository.UserdataUserRepository;
 import guru.qa.niffler.data.repository.impl.jdbc.AuthUserRepositoryJdbc;
-
 import guru.qa.niffler.data.repository.impl.jdbc.UserDataRepositoryJdbc;
 import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CurrencyValues;
