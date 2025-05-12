@@ -7,6 +7,7 @@ import guru.qa.niffler.jupiter.annotation.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
+import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.page.MainPage;
 import org.junit.jupiter.api.Test;
@@ -16,26 +17,22 @@ public class SpendingTest {
 
   private static final Config CFG = Config.getInstance();
 
-  @User(
-      username = "duck",
-      spendings = @Spend(
+  @User(spendings = @Spend(
           category = "Обучение",
-          description = "Обучение Advanced 2.0",
-          amount = 79990,
+          description = "Обучение Niffler 2.0",
+          amount = 89000.00,
           currency = CurrencyValues.RUB
-      )
-  )
+  ))
   @Test
-  void categoryDescriptionShouldBeChangedFromTable(SpendJson spend) {
-    final String newDescription = "Обучение Niffler Next Generation";
-
+  void spendingDescriptionShouldBeUpdatedByTableAction(UserJson user) {
+    final String newDescription = "Обучение Niffler NG";
+    SpendJson spend = user.testData().spendings().getFirst();
     Selenide.open(CFG.frontUrl(), LoginPage.class)
-        .successLogin("duck", "12345")
-        .editSpending(spend.description())
-        .editDescription(newDescription)
-        .save();
+            .successLogin(user.username(), user.testData().password())
+            .editSpending(spend.description())
+            .editDescription(newDescription);
 
-    new MainPage().checkThatTableContainsSpending(newDescription);
+    new MainPage().checkThatTableContains(newDescription);
   }
 }
 
