@@ -17,10 +17,10 @@ public record CategoryJson(
 
     public static CategoryJson fromEntity(CategoryEntity entity) {
         return new CategoryJson(
-            entity.getId(),
-            entity.getName(),
-            entity.getUsername(),
-            entity.isArchived()
+                entity.getId(),
+                entity.getName(),
+                entity.getUsername(),
+                entity.isArchived()
         );
     }
 }

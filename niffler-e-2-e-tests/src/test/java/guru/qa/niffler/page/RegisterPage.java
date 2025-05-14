@@ -1,38 +1,65 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.config.Config;
+import io.qameta.allure.Step;
 
-import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 
 public class RegisterPage {
+    public static final String URL = Config.getInstance().authUrl() + "register";
 
-  private final SelenideElement usernameInput = $("input[name='username']");
-  private final SelenideElement passwordInput = $("input[name='password']");
-  private final SelenideElement passwordSubmitInput = $("input[name='passwordSubmit']");
-  private final SelenideElement submitButton = $("button[type='submit']");
-  private final SelenideElement proceedLoginButton = $(".form_sign-in");
-  private final SelenideElement errorContainer = $(".form__error");
+    private final SelenideElement usernameInput = $("input[name='username']");
+    private final SelenideElement passwordInput = $("input[name='password']");
+    private final SelenideElement submitPasswordInput = $("input[name='passwordSubmit']");
+    private final SelenideElement signUpBtn = $("button[type='submit']");
+    private final SelenideElement signInBtn = $(".form_sign-in");
+    private final SelenideElement errorMessage = $(".form__error");
 
-  public RegisterPage fillRegisterPage(String login, String password, String passwordSubmit) {
-    usernameInput.setValue(login);
-    passwordInput.setValue(password);
-    passwordSubmitInput.setValue(passwordSubmit);
-    return this;
-  }
+    @Step("Set username: '{0}'")
+    public RegisterPage setUserName(String username) {
+        usernameInput.setValue(username);
+        return this;
+    }
 
-  public LoginPage successSubmit() {
-    submit();
-    proceedLoginButton.click();
-    return new LoginPage();
-  }
+    @Step("Set password: '{0}'")
+    public RegisterPage setPassword(String password) {
+        passwordInput.setValue(password);
+        return this;
+    }
 
-  public void submit() {
-    submitButton.click();
-  }
+    @Step("Submit password: '{0}'")
+    public RegisterPage setPasswordSubmit(String password) {
+        submitPasswordInput.setValue(password);
+        return this;
+    }
 
-  public RegisterPage checkAlertMessage(String errorMessage) {
-    errorContainer.shouldHave(text(errorMessage));
-    return this;
-  }
+    @Step("Click sign up button")
+    public RegisterPage submitRegistration() {
+        signUpBtn.click();
+        return this;
+    }
+
+    @Step("Click Sign in button")
+    public RegisterPage clickSignInBtn() {
+        signInBtn.click();
+        return this;
+    }
+
+    @Step("Register with username - '{0}', password - '{1}'")
+    public LoginPage doRegister(String username, String password, String submitPassword) {
+        usernameInput.setValue(username);
+        passwordInput.setValue(password);
+        submitPasswordInput.setValue(submitPassword);
+        signUpBtn.click();
+        signInBtn.click();
+        return new LoginPage();
+    }
+
+    @Step("Check error message with text '{errorText}'")
+    public RegisterPage checkErrorMessage(String errorText) {
+        errorMessage.shouldBe(visible).shouldHave(exactText(errorText));
+        return this;
+    }
 }

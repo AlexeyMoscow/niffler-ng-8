@@ -12,7 +12,7 @@ import org.junit.platform.commons.support.SearchOption;
 
 public class IssueExtension implements ExecutionCondition {
 
-  private final GhApiClient ghApiClient = new GhApiClient();
+  private static final GhApiClient ghApiClient = new GhApiClient();
 
   @SneakyThrows
   @Override

@@ -10,24 +10,21 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 public class SpendEntityRowMapper implements RowMapper<SpendEntity> {
+    public static final SpendEntityRowMapper instance = new SpendEntityRowMapper();
 
-  public static final SpendEntityRowMapper instance = new SpendEntityRowMapper();
+    public SpendEntityRowMapper() {
+    }
 
-  private SpendEntityRowMapper() {
-  }
-
-  @Override
-  public SpendEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
-    SpendEntity result = new SpendEntity();
-    result.setId(rs.getObject("id", UUID.class));
-    result.setUsername(rs.getString("username"));
-    result.setSpendDate(rs.getDate("spend_date"));
-    result.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
-    result.setAmount(rs.getDouble("amount"));
-    result.setDescription(rs.getString("description"));
-    CategoryEntity category = new CategoryEntity();
-    category.setId(rs.getObject("category_id", UUID.class));
-    result.setCategory(category);
-    return result;
-  }
+    @Override
+    public SpendEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
+        SpendEntity result = new SpendEntity();
+        result.setId(rs.getObject("id", UUID.class));
+        result.setUsername(rs.getString("username"));
+        result.setSpendDate(rs.getDate("spend_date"));
+        result.setCurrency(CurrencyValues.valueOf(rs.getString("currency")));
+        result.setAmount(rs.getDouble("amount"));
+        result.setDescription(rs.getString("description"));
+        result.setCategory((rs.getObject("category_id", CategoryEntity.class)));
+        return result;
+    }
 }
