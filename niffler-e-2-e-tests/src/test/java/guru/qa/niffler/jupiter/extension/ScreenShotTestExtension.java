@@ -12,6 +12,7 @@ import org.springframework.core.io.ClassPathResource;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
 
@@ -23,17 +24,25 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return AnnotationSupport.isAnnotated(extensionContext.getRequiredTestMethod(), ScreenShotTest.class) &&
-               parameterContext.getParameter().getType().isAssignableFrom(BufferedImage.class);
+                parameterContext.getParameter().getType().isAssignableFrom(BufferedImage.class);
     }
 
     @SneakyThrows
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
-        return ImageIO.read(new ClassPathResource("img/expected-stat.png").getInputStream());
+        ScreenShotTest screenShotTest = extensionContext.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
+        return ImageIO.read(new ClassPathResource(screenShotTest.value()).getInputStream());
     }
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+        ScreenShotTest screenShotTest = context.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
+        if (screenShotTest.rewriteExpected()) {
+            BufferedImage actual = getActual();
+            if (actual != null) {
+                ImageIO.write(actual, "png", new File("src/test/resources/" + screenShotTest.value()));
+            }
+        }
         ScreenDiff screenDiff = new ScreenDiff(
                 "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
                 "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
@@ -45,7 +54,6 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
                 "application/vnd.allure.image.diff",
                 objectMapper.writeValueAsString(screenDiff)
         );
-
         throw throwable;
     }
 
@@ -54,7 +62,7 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
     }
 
     public static BufferedImage getExpected(){
-       return TestMethodContextExtension.context().getStore(NAMESPACE).get("expected", BufferedImage.class);
+        return TestMethodContextExtension.context().getStore(NAMESPACE).get("expected", BufferedImage.class);
     }
 
     public static void setActual(BufferedImage actual){

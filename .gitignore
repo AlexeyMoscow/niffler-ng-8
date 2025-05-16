@@ -40,3 +40,20 @@ out/
 
 ### gRPC generated files ###
 /niffler-grpc-common/src/generated/**
+/.logs/niffler-auth/app.log
+/.logs/niffler-currency/app.log
+/.logs/niffler-gateway/app.log
+/.logs/niffler-spend/app.log
+/.logs/niffler-userdata/app.log
+/logs/niffler-auth/app.log
+/.logs/niffler-auth/app.log.2025-05-14.gz
+/.logs/niffler-currency/app.log.2025-05-14.gz
+/.logs/niffler-gateway/app.log.2025-05-14.gz
+/.logs/niffler-spend/app.log.2025-05-14.gz
+/.logs/niffler-userdata/app.log.2025-05-14.gz
+/.logs/niffler-auth/app.log.2025-05-15.gz
+/.logs/niffler-currency/app.log.2025-05-15.gz
+/.logs/niffler-spend/app.log.2025-05-15.gz
+/.logs/niffler-userdata/app.log.2025-05-15.gz
+/niffler-e-2-e-tests/tmlog.lck
+/niffler-e-2-e-tests/tmlog16.log

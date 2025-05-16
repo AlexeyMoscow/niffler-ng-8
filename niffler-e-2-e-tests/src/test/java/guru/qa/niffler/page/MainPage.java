@@ -1,14 +1,23 @@
 package guru.qa.niffler.page;
 
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.test.web.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
+import lombok.SneakyThrows;
 import org.openqa.selenium.Keys;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.util.List;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class MainPage {
 
@@ -17,6 +26,10 @@ public class MainPage {
     private final SelenideElement contextMenuInAvatarBtn = $("button[aria-label='Menu']");
     private final ElementsCollection contextMenuElements = $$(".MuiList-padding li");
     private final SelenideElement searchField = $("input[type='text']");
+    private final SelenideElement diagramElement = $("canvas[role='img']");
+    private final ElementsCollection statisticCells = $$("#legend-container li");
+    private final SelenideElement deleteBtn = $("#delete");
+    private final SelenideElement dialogWindow = $("div[role='dialog']");
 
     public EditSpendingPage editSpending(String spendingDescription) {
         tableRows.find(text(spendingDescription))
@@ -65,6 +78,34 @@ public class MainPage {
     public MainPage search(String spend) {
         searchField.sendKeys(spend);
         searchField.sendKeys(Keys.ENTER);
+        return this;
+    }
+
+    @Step("Delete spending with description {0}")
+    public MainPage deleteSpending(String spendingDescription) {
+        tableRows.find(text(spendingDescription))
+                .$$("td")
+                .get(0)
+                .click();
+        deleteBtn.click();
+        dialogWindow.$(byText("Delete")).click();
+        return new MainPage();
+    }
+
+    @Step("Check statistic cell")
+    public MainPage checkStatisticDiagramInfo(List<String> spendInfo) {
+        for (String info : spendInfo){
+            statisticCells.findBy(text(info)).shouldBe(visible);
+        }
+        return this;
+    }
+
+    @SneakyThrows
+    @Step("Check statistic diagram")
+    public MainPage checkStatisticDiagram(BufferedImage expected) {
+        Selenide.sleep(3000);
+        BufferedImage actual = ImageIO.read(diagramElement.screenshot());
+        assertFalse(new ScreenDiffResult(expected, actual));
         return this;
     }
 }
