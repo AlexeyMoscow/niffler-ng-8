@@ -36,25 +36,27 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-        ScreenShotTest screenShotTest = context.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
-        if (screenShotTest.rewriteExpected()) {
-            BufferedImage actual = getActual();
-            if (actual != null) {
-                ImageIO.write(actual, "png", new File("src/test/resources/" + screenShotTest.value()));
+        if (throwable.getMessage().contains("Screen comparison failure")) {
+            ScreenShotTest screenShotTest = context.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
+            if (screenShotTest.rewriteExpected()) {
+                BufferedImage actual = getActual();
+                if (actual != null) {
+                    ImageIO.write(actual, "png", new File("src/test/resources/" + screenShotTest.value()));
+                }
             }
-        }
-        ScreenDiff screenDiff = new ScreenDiff(
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
-                "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getDiff()))
-        );
+            ScreenDiff screenDiff = new ScreenDiff(
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getExpected())),
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getActual())),
+                    "data:image/png;base64," + Base64.getEncoder().encodeToString(imageToBytes(getDiff()))
+            );
 
-        Allure.addAttachment(
-                "Screenshot diff",
-                "application/vnd.allure.image.diff",
-                objectMapper.writeValueAsString(screenDiff)
-        );
-        throw throwable;
+            Allure.addAttachment(
+                    "Screenshot diff",
+                    "application/vnd.allure.image.diff",
+                    objectMapper.writeValueAsString(screenDiff)
+            );
+            throw throwable;
+        }
     }
 
     public static void setExpected(BufferedImage expected){

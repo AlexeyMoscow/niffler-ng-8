@@ -3,6 +3,7 @@ package guru.qa.niffler.page;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import guru.qa.niffler.condition.Color;
 import guru.qa.niffler.test.web.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
@@ -17,6 +18,7 @@ import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static guru.qa.niffler.condition.StatConditions.color;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class MainPage {
@@ -106,6 +108,11 @@ public class MainPage {
         Selenide.sleep(3000);
         BufferedImage actual = ImageIO.read(diagramElement.screenshot());
         assertFalse(new ScreenDiffResult(expected, actual));
+        return this;
+    }
+
+    public MainPage checkBubbles(Color... expectedColor) {
+        statisticCells.shouldHave(color(expectedColor));
         return this;
     }
 }
