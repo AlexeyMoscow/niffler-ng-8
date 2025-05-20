@@ -8,6 +8,7 @@ import guru.qa.niffler.jupiter.annotation.ScreenShotTest;
 import guru.qa.niffler.jupiter.annotation.Spending;
 import guru.qa.niffler.jupiter.annotation.meta.User;
 import guru.qa.niffler.jupiter.annotation.meta.WebTest;
+import guru.qa.niffler.model.Bubble;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.page.LoginPage;
@@ -43,20 +44,23 @@ public class SpendingTest {
     }
 
     @User(
-            spendings = @Spending(
-                    category = "Проезд",
+            spendings = {@Spending(
+                    category = "Еда",
                     description = "Сырки Б Ю Александров",
                     amount = 1250.00,
                     currency = CurrencyValues.RUB
-            ))
-    @ScreenShotTest("img/expected-stat.png")
+            ), @Spending(
+                    category = "Хобби",
+                    description = "Казино",
+                    amount = 777.00,
+                    currency = CurrencyValues.RUB
+            )})
+    @ScreenShotTest(value = "img/expected-stat.png")
     void checkStatComponentTest(UserJson user, BufferedImage expected) {
         Selenide.open(CFG.frontUrl(), LoginPage.class)
                 .doLogin(user.username(), user.testData().password())
-                .checkStatisticDiagramInfo(List.of("Проезд 1250 ₽"))
-                .checkBubbles(Color.yellow)
+                .checkStatBubblesInAnyOrder(new Bubble(Color.green, "Еда 1250 ₽"), new Bubble(Color.yellow, "Хобби 777 ₽"))
                 .checkStatisticDiagram(expected);
-
     }
 @User(
         spendings = {
