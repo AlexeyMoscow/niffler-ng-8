@@ -1,6 +1,7 @@
 package guru.qa.niffler.page;
 
-import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.config.Config;
 import io.qameta.allure.Step;
@@ -12,11 +13,27 @@ import static com.codeborne.selenide.Selenide.$;
 public class LoginPage {
   public static final String URL = Config.getInstance().authUrl() + "login";
 
-  private final SelenideElement usernameInput = $("input[name='username']");
-  private final SelenideElement passwordInput = $("input[name='password']");
-  private final SelenideElement submitBtn = $("button[type='submit']");
-  private final SelenideElement createAccountBtn = $("a[href='/register']");
-  private final SelenideElement errorMessage = $(".form__error");
+  private final SelenideElement usernameInput;
+  private final SelenideElement passwordInput;
+  private final SelenideElement submitBtn;
+  private final SelenideElement createAccountBtn;
+  private final SelenideElement errorMessage;
+
+  public LoginPage(SelenideDriver driver) {
+    this.usernameInput = driver.$("input[name='username']");
+    this.passwordInput = driver.$("input[name='password']");
+    this.submitBtn = driver.$("button[type='submit']");
+    this.createAccountBtn = driver.$("a[href='/register']");
+    this.errorMessage = driver.$(".form__error");
+  }
+
+  public LoginPage() {
+    this.usernameInput = $("input[name='username']");
+    this.passwordInput = $("input[name='password']");
+    this.submitBtn = $("button[type='submit']");
+    this.createAccountBtn = $("a[href='/register']");
+    this.errorMessage = $(".form__error");
+  }
 
   @Step("Log in with credentials: username - {0}, password - {1}")
   public MainPage doLogin(String username, String password) {

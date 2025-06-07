@@ -14,6 +14,7 @@ import guru.qa.niffler.data.tpl.XaTransactionTemplate;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UsersClient;
+import io.qameta.allure.Step;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -42,6 +43,7 @@ public class UsersDbClient implements UsersClient {
 
 
     @Override
+    @Step("Create user using SQL")
     public UserJson createUser(UserJson user) {
         return xaTransactionTemplate.execute(() -> {
             AuthUserEntity authUserEntity = authUserEntity(user);
@@ -53,6 +55,7 @@ public class UsersDbClient implements UsersClient {
     }
 
     @Override
+    @Step("Create user using SQL")
     public UserJson createUser(String username, String password) {
         return xaTransactionTemplate.execute(() -> {
             AuthUserEntity authUserEntity = authUserEntity(username, password);

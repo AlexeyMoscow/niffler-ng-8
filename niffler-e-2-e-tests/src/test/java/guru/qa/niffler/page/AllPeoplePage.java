@@ -12,6 +12,7 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class AllPeoplePage {
     public static final String URL = Config.getInstance().authUrl() + "people/all";
+
     ElementsCollection friendRows = $$("tr");
 
     @Step("Check outcome request to '{0}' exists")

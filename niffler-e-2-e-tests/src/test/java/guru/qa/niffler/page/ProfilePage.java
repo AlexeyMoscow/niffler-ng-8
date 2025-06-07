@@ -16,7 +16,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class ProfilePage {
-    private final SelenideElement avatar = $("input[type='file']").parent().$("#image_input");
+    private final SelenideElement avatar = $(".MuiAvatar-img");
     private final SelenideElement pictureInput = $("input[type='file']");
     private final SelenideElement usernameInput = $("input[name='username']");
     private final SelenideElement nameInput = $("input[name='name']");
@@ -38,13 +38,6 @@ public class ProfilePage {
     }
 
     @SneakyThrows
-    @Step("Upload avatar")
-    public ProfilePage uploadAvatar(String path) {
-        pictureInput.uploadFromClasspath(path);
-        return this;
-    }
-
-    @SneakyThrows
     @Step("Check profile avatar")
     public ProfilePage checkAvatar(BufferedImage expected) {
         Selenide.sleep(3000);
@@ -53,5 +46,10 @@ public class ProfilePage {
         return this;
     }
 
-
+    @SneakyThrows
+    @Step("Upload avatar")
+    public ProfilePage uploadAvatar(String path) {
+        pictureInput.uploadFromClasspath(path);
+        return this;
+    }
 }

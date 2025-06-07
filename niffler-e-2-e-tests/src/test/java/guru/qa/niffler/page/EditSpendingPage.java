@@ -10,10 +10,11 @@ public class EditSpendingPage {
   private final SelenideElement sumInput = $("#amount");
   private final SelenideElement submitBtn = $("#save");
 
-  public void editDescription(String description) {
+  public MainPage editDescription(String description) {
     descriptionInput.clear();
     descriptionInput.setValue(description);
     submitBtn.click();
+    return new MainPage();
   }
 
   public MainPage editSum(String sum) {

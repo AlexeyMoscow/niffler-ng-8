@@ -24,7 +24,7 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return AnnotationSupport.isAnnotated(extensionContext.getRequiredTestMethod(), ScreenShotTest.class) &&
-                parameterContext.getParameter().getType().isAssignableFrom(BufferedImage.class);
+               parameterContext.getParameter().getType().isAssignableFrom(BufferedImage.class);
     }
 
     @SneakyThrows
@@ -36,7 +36,7 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
 
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-        if (throwable.getMessage().contains("Screen comparison failure")) {
+        if (throwable.getMessage().contains("Screen comparison failure")){
             ScreenShotTest screenShotTest = context.getRequiredTestMethod().getAnnotation(ScreenShotTest.class);
             if (screenShotTest.rewriteExpected()) {
                 BufferedImage actual = getActual();
@@ -55,8 +55,8 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
                     "application/vnd.allure.image.diff",
                     objectMapper.writeValueAsString(screenDiff)
             );
-            throw throwable;
         }
+        throw throwable;
     }
 
     public static void setExpected(BufferedImage expected){
@@ -64,7 +64,7 @@ public class ScreenShotTestExtension implements ParameterResolver, TestExecution
     }
 
     public static BufferedImage getExpected(){
-        return TestMethodContextExtension.context().getStore(NAMESPACE).get("expected", BufferedImage.class);
+       return TestMethodContextExtension.context().getStore(NAMESPACE).get("expected", BufferedImage.class);
     }
 
     public static void setActual(BufferedImage actual){

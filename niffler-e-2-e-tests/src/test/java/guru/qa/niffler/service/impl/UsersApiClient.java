@@ -4,6 +4,7 @@ import guru.qa.niffler.api.UsersApi;
 import guru.qa.niffler.config.Config;
 import guru.qa.niffler.model.UserJson;
 import guru.qa.niffler.service.UsersClient;
+import io.qameta.allure.Step;
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -26,11 +27,13 @@ public class UsersApiClient implements UsersClient {
 
     private final UsersApi usersApi = retrofit.create(UsersApi.class);
     @Override
+    @Step("Create user using API")
     public UserJson createUser(UserJson user) {
         throw new UnsupportedOperationException("Method not implemented yet");
     }
 
     @Override
+    @Step("Create user using API")
     public UserJson createUser(String username, String password) {
         throw new UnsupportedOperationException("Method not implemented yet");
     }
