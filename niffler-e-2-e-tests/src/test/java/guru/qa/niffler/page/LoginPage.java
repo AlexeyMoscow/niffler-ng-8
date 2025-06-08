@@ -1,5 +1,6 @@
 package guru.qa.niffler.page;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideDriver;
 import com.codeborne.selenide.SelenideElement;
@@ -18,6 +19,7 @@ public class LoginPage {
   private final SelenideElement submitBtn;
   private final SelenideElement createAccountBtn;
   private final SelenideElement errorMessage;
+  private final SelenideElement logo;
 
   public LoginPage(SelenideDriver driver) {
     this.usernameInput = driver.$("input[name='username']");
@@ -25,6 +27,7 @@ public class LoginPage {
     this.submitBtn = driver.$("button[type='submit']");
     this.createAccountBtn = driver.$("a[href='/register']");
     this.errorMessage = driver.$(".form__error");
+    this.logo = driver.$(".logo-section__text");
   }
 
   public LoginPage() {
@@ -33,6 +36,13 @@ public class LoginPage {
     this.submitBtn = $("button[type='submit']");
     this.createAccountBtn = $("a[href='/register']");
     this.errorMessage = $(".form__error");
+    this.logo = $(".logo-section__text");
+  }
+
+  @Step("Check text of the logo")
+  public MainPage checkLogoText() {
+    logo.shouldHave(Condition.text("Niffler"));
+    return new MainPage();
   }
 
   @Step("Log in with credentials: username - {0}, password - {1}")

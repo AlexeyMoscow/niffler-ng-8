@@ -14,7 +14,6 @@ import guru.qa.niffler.page.LoginPage;
 import guru.qa.niffler.test.web.utils.SelenideUtils;
 import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
