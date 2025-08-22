@@ -7,21 +7,31 @@ import guru.qa.niffler.model.CategoryJson;
 import guru.qa.niffler.model.CurrencyValues;
 import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.service.SpendClient;
+import io.qameta.allure.okhttp3.AllureOkHttp3;
 import okhttp3.OkHttpClient;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ParametersAreNonnullByDefault
 public class SpendApiClient implements SpendClient {
 
     private static final Config CFG = Config.getInstance();
 
-    private final OkHttpClient client = new OkHttpClient.Builder().build();
+    private final OkHttpClient client = new OkHttpClient.Builder().
+            addNetworkInterceptor(new AllureOkHttp3()
+                    .setRequestTemplate("my-http-request.ftl")
+                    .setResponseTemplate("my-http-response.ftl"))
+            .build();
     private final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(CFG.spendUrl())
             .client(client)
@@ -31,7 +41,7 @@ public class SpendApiClient implements SpendClient {
     private final SpendApi spendApi = retrofit.create(SpendApi.class);
 
     @Override
-    public SpendJson createSpend(SpendJson spend) {
+    public @Nullable SpendJson createSpend(SpendJson spend) {
         final Response<SpendJson> response;
         try {
             response = spendApi.addSpend(spend)
@@ -43,7 +53,7 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
-    public SpendJson editSpend(SpendJson spend) {
+    public @Nullable SpendJson editSpend(SpendJson spend) {
         final Response<SpendJson> response;
         try {
             response = spendApi.editSpend(spend)
@@ -55,7 +65,7 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
-    public SpendJson getSpendById(String id) {
+    public @Nullable SpendJson getSpendById(String id) {
         final Response<SpendJson> response;
         try {
             response = spendApi.getSpendById(id)
@@ -67,8 +77,9 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
-    public SpendJson getAllSpends(String filterPeriod, CurrencyValues filterCurrency) {
-        final Response<SpendJson> response;
+    public @Nonnull List<SpendJson> getAllSpends(String filterPeriod,
+                                  @Nullable CurrencyValues filterCurrency) {
+        final Response<List<SpendJson>> response;
         try {
             response = spendApi.getAllSpends(filterPeriod, filterCurrency)
                     .execute();
@@ -76,7 +87,9 @@ public class SpendApiClient implements SpendClient {
             throw new AssertionError(e);
         }
         assertEquals(200, response.code());
-        return response.body();
+        return response.body() != null
+                ? response.body()
+                : Collections.emptyList();
     }
 
     public void removeSpend(List<String> ids) {
@@ -91,7 +104,7 @@ public class SpendApiClient implements SpendClient {
     }
 
     @Override
-    public CategoryJson createCategory(CategoryJson category) {
+    public @Nullable CategoryJson createCategory(CategoryJson category) {
         final Response<CategoryJson> response;
         try {
             response = spendApi.addCategory(category)
@@ -103,7 +116,7 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
-    public CategoryJson updateCategory(CategoryJson category) {
+    public @Nullable CategoryJson updateCategory(CategoryJson category) {
         final Response<CategoryJson> response;
         try {
             response = spendApi.updateCategory(category)
@@ -115,7 +128,7 @@ public class SpendApiClient implements SpendClient {
         return response.body();
     }
 
-    public List<CategoryJson> getAllCategories(Boolean excludeArchived) {
+    public @Nonnull List<CategoryJson> getAllCategories(Boolean excludeArchived) {
         final Response<List<CategoryJson>> response;
         try {
             response = spendApi.getAllCategories(excludeArchived)
@@ -124,6 +137,8 @@ public class SpendApiClient implements SpendClient {
             throw new AssertionError(e);
         }
         assertEquals(200, response.code());
-        return response.body();
+        return response.body() != null
+                ? response.body()
+                : Collections.emptyList();
     }
 }

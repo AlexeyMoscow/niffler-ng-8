@@ -10,6 +10,8 @@ public class EditSpendingPage {
   private final SelenideElement sumInput = $("#amount");
   private final SelenideElement submitBtn = $("#save");
 
+  //private final Calendar calendar = new Calendar()
+
   public MainPage editDescription(String description) {
     descriptionInput.clear();
     descriptionInput.setValue(description);

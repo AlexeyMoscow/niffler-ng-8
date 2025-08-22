@@ -20,7 +20,7 @@ public interface SpendApi {
     Call<SpendJson> getSpendById(@Path("id") String id);
 
     @GET("internal/spends/all")
-    Call<SpendJson> getAllSpends(@Query("filterPeriod") String filterPeriod,
+    Call<List<SpendJson>> getAllSpends(@Query("filterPeriod") String filterPeriod,
                                  @Query("filterCurrency") CurrencyValues filterCurrency);
 
     @DELETE("internal/spends/remove")

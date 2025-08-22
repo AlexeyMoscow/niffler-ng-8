@@ -4,18 +4,15 @@ import com.codeborne.selenide.CheckResult;
 import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.WebElementsCondition;
-import com.github.jknack.handlebars.internal.lang3.ArrayUtils;
 import guru.qa.niffler.model.SpendJson;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
-
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import static com.codeborne.selenide.CheckResult.accepted;
 import static com.codeborne.selenide.CheckResult.rejected;
@@ -23,6 +20,7 @@ import static com.codeborne.selenide.Selenide.$$;
 
 @ParametersAreNonnullByDefault
 public class SpendConditions {
+
     @Nonnull
     public static WebElementsCondition spend(@Nonnull SpendJson... expectedSpends) {
         return new WebElementsCondition() {

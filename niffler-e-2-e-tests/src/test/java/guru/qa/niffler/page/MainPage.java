@@ -4,6 +4,8 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import guru.qa.niffler.condition.Color;
+import guru.qa.niffler.model.Bubble;
+import guru.qa.niffler.model.SpendJson;
 import guru.qa.niffler.test.web.utils.ScreenDiffResult;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
@@ -17,7 +19,8 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
-import static guru.qa.niffler.condition.StatConditions.color;
+import static guru.qa.niffler.condition.SpendConditions.spend;
+import static guru.qa.niffler.condition.StatConditions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class MainPage {
@@ -89,6 +92,30 @@ public class MainPage {
     @Step("Check statistic bubble color")
     public MainPage checkBubbles(Color... expectedColor) {
         statisticCells.shouldHave(color(expectedColor));
+        return this;
+    }
+
+    @Step("Check stat bubbles")
+    public MainPage checkStatBubbles(Bubble... expectedBubbles) {
+        statisticCells.shouldHave(bubble(expectedBubbles));
+        return this;
+    }
+
+    @Step("Check stat bubbles in any order")
+    public MainPage checkStatBubblesInAnyOrder(Bubble... expectedBubbles) {
+        statisticCells.shouldHave(bubblesInAnyOrder(expectedBubbles));
+        return this;
+    }
+
+    @Step("Check stat bubbles contains")
+    public MainPage checkStatBubblesContains(Bubble... expectedBubbles) {
+        statisticCells.shouldHave(bubblesContains(expectedBubbles));
+        return this;
+    }
+
+    @Step("Check spending table")
+    public MainPage checkSpendTable(SpendJson... expectedSpends) {
+        tableRows.shouldHave(spend(expectedSpends));
         return this;
     }
 
